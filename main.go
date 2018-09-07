@@ -12,7 +12,7 @@ import (
 	datadog "github.com/zorkian/go-datadog-api"
 )
 
-var datadogClient = datadog.NewClient(os.Getenv("DATADOG_API_TOKEN"), "")
+var datadogClient = datadog.NewClient(os.Getenv("DATADOG_API_KEY"), "")
 var runningMetricName = "circleci.queue.running"
 var notRunningMetricName = "circleci.queue.not_running"
 
