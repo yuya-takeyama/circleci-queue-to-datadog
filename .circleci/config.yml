@@ -7,5 +7,8 @@ jobs:
     steps:
     - checkout
     - run:
+        name: Install dependencies
+        command: go get -u -v golang.org/x/lint/golint
+    - run:
         name: Lint
         command: golint
