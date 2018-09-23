@@ -18,6 +18,7 @@ const appName = "circleci-queue-to-datadog"
 
 type options struct {
 	Usernames string `long:"usernames" description:"Comma-separated list of usernames to check queue"`
+	Interval  int    `long:"interval" description:"Interval to check CircleCI queue in seconds" default:"60"`
 }
 
 var opts options
@@ -54,7 +55,7 @@ func main() {
 
 	for {
 		go getAndSendMetrics()
-		time.Sleep(60 * time.Second)
+		time.Sleep(time.Duration(opts.Interval) * time.Second)
 	}
 }
 
