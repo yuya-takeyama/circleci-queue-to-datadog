@@ -51,7 +51,7 @@ func main() {
 	}
 
 	if opts.ShowVersion {
-		fmt.Printf("%s  v%s, build %s\n", appName, version, gitCommit)
+		fmt.Printf("%s v%s, build %s\n", appName, version, gitCommit)
 		os.Exit(0)
 	}
 
