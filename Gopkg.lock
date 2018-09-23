@@ -2,11 +2,12 @@
 
 
 [[projects]]
-  digest = "1:0d5fdcd4a963f5486979d53d72c7d784ced34836e3eba766977962c1e630fedd"
+  digest = "1:2209584c0f7c9b68c23374e659357ab546e1b70eec2761f03280f69a8fd23d77"
   name = "github.com/cenkalti/backoff"
   packages = ["."]
   pruneopts = "UT"
-  revision = "b02f2bbce11d7ea6b97f282ef1771b0fe2f65ef3"
+  revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
+  version = "v2.0.0"
 
 [[projects]]
   digest = "1:a2cff208d4759f6ba1b1cd228587b0a1869f95f22542ec9cd17fff64430113c7"
@@ -23,6 +24,14 @@
   pruneopts = "UT"
   revision = "05fc4ddce70eb5e917af1c4453fd50694ce10964"
   version = "v2.13.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:76ee51c3f468493aff39dbacc401e8831fbb765104cbf613b89bef01cf4bad70"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  pruneopts = "UT"
+  revision = "2f5d2388922f370f4355f327fcf4cfe9f5583908"
 
 [solve-meta]
   analyzer-name = "dep"
