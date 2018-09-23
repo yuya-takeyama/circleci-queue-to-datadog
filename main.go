@@ -17,8 +17,9 @@ import (
 const appName = "circleci-queue-to-datadog"
 
 type options struct {
-	Usernames string `long:"usernames" description:"Comma-separated list of usernames to check queue"`
-	Interval  int    `long:"interval" description:"Interval to check CircleCI queue in seconds" default:"60"`
+	Usernames   string `long:"usernames" description:"Comma-separated list of usernames to check queue"`
+	Interval    int    `long:"interval" description:"Interval to check CircleCI queue in seconds" default:"60"`
+	ShowVersion bool   `short:"v" long:"version" description:"Show version"`
 }
 
 var opts options
@@ -47,6 +48,11 @@ func main() {
 		} else {
 			log.Fatalf("Option error: %s", err)
 		}
+	}
+
+	if opts.ShowVersion {
+		fmt.Printf("%s  v%s, build %s\n", appName, version, gitCommit)
+		os.Exit(0)
 	}
 
 	if len(opts.Usernames) > 1 {
