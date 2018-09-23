@@ -2,6 +2,10 @@
 
 Monitor CircleCI queue and save it as Datadog metrics.
 
+With the metric data, you can create dashboards like this on Datadog:
+
+![Datadog Dashboard](dashboard.png)
+
 ## Prerequisites
 
 * CircleCI API Token
