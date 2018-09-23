@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/yuya-takeyama/circleci-queue-to-datadog
+    docker:
+    - image: circleci/golang:1.10
+    steps:
+    - checkout
+    - run:
+        name: Lint
+        command: golint
