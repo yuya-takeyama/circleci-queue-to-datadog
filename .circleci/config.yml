@@ -12,3 +12,6 @@ jobs:
     - run:
         name: Lint
         command: golint
+    - run:
+        name: Test
+        command: go test -race
