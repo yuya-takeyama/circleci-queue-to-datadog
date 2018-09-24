@@ -70,14 +70,14 @@ func getAndSendMetrics() {
 	if runningCounts, notRunningCounts, err := getJobCounts(); err != nil {
 		log.Println(err)
 	} else {
-		log.Printf("running:%d\tnot_running:%d\n", runningCounts.getTotalCount(), notRunningCounts.getTotalCount())
+		log.Printf("running:%d\tnot_running:%d", runningCounts.getTotalCount(), notRunningCounts.getTotalCount())
 
 		metrics := append(runningCounts.toMetrics(now, runningMetricName), notRunningCounts.toMetrics(now, notRunningMetricName)...)
 
 		if err := datadogClient.PostMetrics(metrics); err != nil {
-			log.Printf("failed to post metrics to Datadog: %s\n", err)
+			log.Printf("failed to post metrics to Datadog: %s", err)
 		} else {
-			log.Printf("successfully sent metrics at %s to Datadog!\n", now.Format(time.RFC3339))
+			log.Printf("successfully sent metrics at %s to Datadog!", now.Format(time.RFC3339))
 		}
 	}
 }
