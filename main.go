@@ -11,6 +11,7 @@ import (
 	"time"
 
 	flags "github.com/jessevdk/go-flags"
+	"github.com/k0kubun/pp"
 	datadog "github.com/zorkian/go-datadog-api"
 )
 
@@ -29,12 +30,18 @@ var datadogClient = datadog.NewClient(os.Getenv("DATADOG_API_KEY"), "")
 var runningMetricName = "circleci.queue.running"
 var notRunningMetricName = "circleci.queue.not_running"
 
+var isDebug = os.Getenv("CIRCLECI_QUEUE_TO_DATADOG_DEBUG") != ""
+
 type circleCiJob struct {
 	VcsType   string `json:"vcs_type"`
 	Username  string `json:"username"`
 	Reponame  string `json:"reponame"`
 	Branch    string `json:"branch"`
 	LifeCycle string `json:"lifecycle"`
+}
+
+func (job *circleCiJob) toKey() string {
+	return fmt.Sprintf("%s/%s/%s/%s", job.VcsType, job.Username, job.Reponame, job.Branch)
 }
 
 func main() {
@@ -70,14 +77,23 @@ func getAndSendMetrics() {
 	if runningCounts, notRunningCounts, err := getJobCounts(); err != nil {
 		log.Println(err)
 	} else {
-		log.Printf("running:%d\tnot_running:%d\n", runningCounts.getTotalCount(), notRunningCounts.getTotalCount())
+		log.Printf("running:%d\tnot_running:%d", runningCounts.getTotalCount(), notRunningCounts.getTotalCount())
 
-		metrics := append(runningCounts.toMetrics(now, runningMetricName), notRunningCounts.toMetrics(now, notRunningMetricName)...)
+		runningMetrics := runningCounts.toMetrics(now, runningMetricName)
+		notRunningMetrics := notRunningCounts.toMetrics(now, notRunningMetricName)
+		metrics := append(runningMetrics, notRunningMetrics...)
 
-		if err := datadogClient.PostMetrics(metrics); err != nil {
-			log.Printf("failed to post metrics to Datadog: %s\n", err)
+		if isDebug {
+			fmt.Fprintln(os.Stderr, "Running:")
+			pp.Fprintln(os.Stderr, runningMetrics)
+			fmt.Fprintln(os.Stderr, "Not Running:")
+			pp.Fprintln(os.Stderr, notRunningMetrics)
 		} else {
-			log.Printf("successfully sent metrics at %s to Datadog!\n", now.Format(time.RFC3339))
+			if err := datadogClient.PostMetrics(metrics); err != nil {
+				log.Printf("failed to post metrics to Datadog: %s", err)
+			} else {
+				log.Printf("successfully sent metrics at %s to Datadog!", now.Format(time.RFC3339))
+			}
 		}
 	}
 }
@@ -121,8 +137,13 @@ func incrJobCounts(jobs []*circleCiJob, runningCounts, notRunningCounts *jobCoun
 		if isTargetJob(job) {
 			if job.LifeCycle == "running" {
 				runningCounts.incr(job)
+				notRunningCounts.ensure(job)
 			} else if job.LifeCycle == "not_running" {
+				runningCounts.ensure(job)
 				notRunningCounts.incr(job)
+			} else {
+				runningCounts.ensure(job)
+				notRunningCounts.ensure(job)
 			}
 		}
 	}
