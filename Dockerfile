@@ -3,9 +3,7 @@ FROM golang:1.11-alpine AS builder
 ADD . /go/src/github.com/yuya-takeyama/circleci-queue-to-datadog
 WORKDIR /go/src/github.com/yuya-takeyama/circleci-queue-to-datadog
 
-RUN apk --update add git curl perl && \
-  curl --fail https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && \
-  dep ensure && \
+RUN apk --update add git perl && \
   COMMIT_HASH=`git describe --always | perl -pe chomp` && \
   go build -ldflags "-X main.gitCommit=${COMMIT_HASH}"
 
