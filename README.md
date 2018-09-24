@@ -29,6 +29,12 @@ $ CIRCLECI_API_TOKEN=<CircleCI API Token> DATADOG_API_KEY=<Datadog API Key> circ
 $ docker run -e CIRCLECI_API_TOKEN=<CircleCI API Token> -e DATADOG_API_KEY=<Datadog API Key> yuyat/circleci-queue-to-datadog
 ```
 
+### Kubernetes
+
+```
+$ kubectl run circleci-queue-to-datadog --image=yuyat/circleci-queue-to-datadog:0.1.0 --env CIRCLECI_API_TOKEN=<CircleCI API Token> --env DATADOG_API_KEY=<Datadog API Key>
+```
+
 ## Options
 
 * `--usernames=USERNAMES`
