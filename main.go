@@ -37,6 +37,10 @@ type circleCiJob struct {
 	LifeCycle string `json:"lifecycle"`
 }
 
+func (job *circleCiJob) toKey() string {
+	return fmt.Sprintf("%s/%s/%s/%s", job.VcsType, job.Username, job.Reponame, job.Branch)
+}
+
 func main() {
 	parser := flags.NewParser(&opts, flags.Default^flags.PrintErrors)
 	parser.Name = appName

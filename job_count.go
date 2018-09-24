@@ -25,19 +25,27 @@ func newJobCounts() *jobCounts {
 	}
 }
 
-func (o *jobCounts) incr(job *circleCiJob) {
-	key := fmt.Sprintf("%s/%s/%s/%s", job.VcsType, job.Username, job.Reponame, job.Branch)
+func (o *jobCounts) ensure(job *circleCiJob) *jobCount {
+	key := job.toKey()
 	if jc, ok := o.jobCounts[key]; ok {
-		jc.Count++
-	} else {
-		o.jobCounts[key] = &jobCount{
-			VcsType:  job.VcsType,
-			Username: job.Username,
-			Reponame: job.Reponame,
-			Branch:   job.Branch,
-			Count:    1,
-		}
+		return jc
 	}
+
+	jc := &jobCount{
+		VcsType:  job.VcsType,
+		Username: job.Username,
+		Reponame: job.Reponame,
+		Branch:   job.Branch,
+		Count:    0,
+	}
+	o.jobCounts[key] = jc
+
+	return jc
+}
+
+func (o *jobCounts) incr(job *circleCiJob) {
+	jc := o.ensure(job)
+	jc.Count++
 }
 
 func (o *jobCounts) toMetrics(now time.Time, metricName string) []datadog.Metric {
