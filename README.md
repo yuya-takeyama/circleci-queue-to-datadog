@@ -42,3 +42,5 @@ $ kubectl run circleci-queue-to-datadog --image=yuyat/circleci-queue-to-datadog:
 * `--intervals=N`
   * Interval to check CircleCI queue in seconds
   * Default: 60
+* `--once`
+  * Exits after the first check

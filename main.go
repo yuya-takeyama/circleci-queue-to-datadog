@@ -20,6 +20,7 @@ const appName = "circleci-queue-to-datadog"
 type options struct {
 	Usernames   string `long:"usernames" description:"Comma-separated list of usernames to check queue"`
 	Interval    int    `long:"interval" description:"Interval to check CircleCI queue in seconds" default:"60"`
+	Once        bool   `long:"once" description:"Exits after the first check"`
 	ShowVersion bool   `short:"v" long:"version" description:"Show version"`
 }
 
@@ -64,6 +65,15 @@ func main() {
 
 	if len(opts.Usernames) > 1 {
 		targetUsernames = append(targetUsernames, strings.Split(opts.Usernames, ",")...)
+	}
+
+	if opts.Once {
+		if opts.Interval > 0 {
+			log.Println("--interval has no effect with --once mode")
+		}
+
+		getAndSendMetrics()
+		return
 	}
 
 	for {
