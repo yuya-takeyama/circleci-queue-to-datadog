@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3.0] - 2018-10-03
+
+### Add
+
+* Add `--once` option [#15](https://github.com/yuya-takeyama/circleci-queue-to-datadog/pull/15)
+
 ## [0.2.0] - 2018-09-24
 
 ### Changed
